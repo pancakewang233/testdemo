@@ -507,11 +507,11 @@ export default {
 .core-analysis-section { margin: 2px 0 0; }
 .analysis-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin-top: 14px; }
 .analysis-card { height: 478px; padding: 0 10px 14px; overflow: hidden; }
-.card-header-bar { height: 43px; display: flex; align-items: center; justify-content: space-between; margin: 0 -10px; padding-left: 18px; padding-right: 12px; position: relative; overflow: hidden; }
-.card-header-bar::before { content: ""; position: absolute; left: 0; top: 0; width: 146px; height: 43px; background: linear-gradient(100deg, #ff4a2f 0%, #ff7058 58%, rgba(255, 169, 165, .72) 82%, rgba(255, 169, 165, 0) 100%); clip-path: polygon(0 0, 100% 0, 86% 100%, 0 100%); }
-.card-title { position: relative; z-index: 1; color: #fff; font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.card-header-bar { height: 36px; display: flex; align-items: center; justify-content: space-between; margin: 0 -10px; padding-left: 18px; padding-right: 12px; position: relative; overflow: hidden; }
+.card-header-bar::before { content: ""; position: absolute; left: 0; top: 0; width: 146px; height: 36px; background: linear-gradient(100deg, #ff4a2f 0%, #ff7058 58%, rgba(255, 169, 165, .72) 82%, rgba(255, 169, 165, 0) 100%); clip-path: polygon(0 0, 100% 0, 86% 100%, 0 100%); }
+.card-title { position: relative; z-index: 1; color: #fff; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 .card-title i { color: #fff; }
-.detail-btn { position: relative; z-index: 1; border: 1px solid #ff5a49; color: #ff4a36; background: #fff; height: 26px; padding: 0 10px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+.detail-btn { position: relative; z-index: 1; border: 1px solid #ff5a49; color: #ff4a36; background: #fff; height: 24px; padding: 0 10px; border-radius: 4px; cursor: pointer; font-size: 13px; }
 .chart-container { width: 100%; min-width: 0; height: 300px; }
 .trend-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: -8px 4px 14px; }
 .tab-item { height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 7px; background: #fff8ea; color: #8a7560; font-size: 13px; }
