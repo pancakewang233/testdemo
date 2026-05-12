@@ -317,12 +317,13 @@ export default {
 
 .special-functions-section { margin: 12px 0 0; }
 .functions-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 16px; }
-.function-card { height: 94px; padding: 15px 16px 12px; }
+.function-card { min-height: 94px; height: auto; padding: 15px 16px 12px; overflow: hidden; }
 .function-header { display: flex; align-items: center; gap: 10px; color: var(--text-red); font-size: 20px; font-weight: 700; margin-bottom: 12px; }
-.function-items { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 20px; color: #555; font-size: 18px; }
-.function-item { display: flex; align-items: center; gap: 6px; min-width: 0; padding-right: 20px; border-right: 1px solid #eee1d4; white-space: nowrap; }
-.function-item:last-child { border-right: 0; }
-.function-item i { color: #777; font-size: 20px; }
+.function-items { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 0; min-width: 0; color: #555; font-size: 16px; }
+.function-item { display: inline-flex; align-items: center; gap: 6px; min-width: 0; max-width: 100%; margin-right: 16px; padding-right: 16px; border-right: 1px solid #eee1d4; line-height: 1.25; white-space: normal; overflow-wrap: anywhere; }
+.function-item:last-child { margin-right: 0; padding-right: 0; border-right: 0; }
+.function-item i { flex-shrink: 0; color: #777; font-size: 19px; }
+.function-item span { min-width: 0; }
 
 @media (max-width: 1280px) {
   .overview-section { grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
