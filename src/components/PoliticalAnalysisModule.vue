@@ -2,81 +2,83 @@
   <div class="political-analysis-module">
     <section class="header-section section-cardless">
       <h1 class="header-title">政治生态智能分析平台</h1>
-      <div class="section-divider"><span></span><b>总体洞察</b><span></span></div>
       <div class="year-selector">
         <span>年份：</span>
         <el-date-picker v-model="selectedYear" type="year" size="small" placeholder="2026" value-format="yyyy" class="year-select" />
       </div>
     </section>
 
-    <section class="overview-section">
-      <div class="overview-card score-card">
-        <div class="card-header"><span class="card-tag"><i class="el-icon-document"></i> 总体平均分</span></div>
-        <div class="score-content">
-          <div class="score-main-wrap">
-            <div class="main-score">{{ chartData.score.average }}</div>
-          </div>
-          <div class="liquid-chart" ref="liquidChart"></div>
-          <div class="score-info">
-            <div class="info-item"><span class="info-label">较上年</span><span class="info-value up">{{ chartData.score.compareLastYear }} <i class="el-icon-top"></i></span></div>
-            <div class="info-item"><span class="info-label">参评单位</span><span class="info-value">{{ chartData.score.evaluatedUnits }}</span></div>
-            <div class="info-item"><span class="info-label">高于平均分</span><span class="info-value">{{ chartData.score.aboveAverage }}</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="overview-card distribution-card">
-        <div class="card-header"><span class="card-tag"><i class="el-icon-document"></i> 分数分布情况</span></div>
-        <div class="distribution-content">
-          <div class="distribution-chart" ref="distributionChart"></div>
-          <div class="conclusion inline-conclusion"><span class="check-dot"><i class="el-icon-check"></i></span><span class="conclusion-tag">核心结论：</span><span>超八成单位得分在<span class="red-text">90</span>分以上</span></div>
-        </div>
-      </div>
-
-      <div class="overview-card trend-card">
-        <div class="card-header"><span class="card-tag"><i class="el-icon-document"></i> 总体趋势情况</span></div>
-        <div class="trend-content">
-          <div class="trend-chart" ref="trendChart"></div>
-          <div class="conclusion inline-conclusion"><span class="check-dot"><i class="el-icon-check"></i></span><span class="conclusion-tag">核心结论：</span><span>连续三年稳步提升，增速平稳</span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="core-analysis-section">
-      <div class="section-divider"><span></span><b>核心分析</b><span></span></div>
-      <div class="analysis-grid">
-        <div v-for="card in analysisCards" :key="card.key" class="analysis-card">
-          <div class="card-header-bar">
-            <span class="card-title"><i class="el-icon-document"></i>{{ card.title }}</span>
-            <button class="detail-btn">查看详情</button>
-          </div>
-          <div class="chart-container" :ref="card.ref"></div>
-          <div v-if="card.key === 'trend'" class="trend-tabs">
-            <span class="tab-item active">各单位趋势</span>
-            <span class="tab-item">各维度趋势</span>
-            <span class="tab-item">各指标趋势</span>
-          </div>
-          <div class="conclusion-text">
-            <div><span class="check-dot"><i class="el-icon-check"></i></span><span class="conclusion-tag">核心结论</span></div>
-            <p>{{ card.conclusion }}</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="special-functions-section">
-      <div class="section-divider"><span></span><b>专项功能</b><span></span></div>
-      <div class="functions-grid">
-        <div v-for="card in functionCards" :key="card.title" class="function-card">
-          <div class="function-header"><i class="el-icon-document"></i><span>{{ card.title }}</span></div>
-          <div class="function-items">
-            <div v-for="item in card.items" :key="item.text" class="function-item">
-              <i :class="item.icon"></i><span>{{ item.text }}</span>
+    <div class="analysis-scroll-content">
+      <div class="section-divider"><span></span><b>总体洞察</b><span></span></div>
+      <section class="overview-section">
+        <div class="overview-card score-card">
+          <div class="card-header"><span class="card-tag"><i class="el-icon-document"></i> 总体平均分</span></div>
+          <div class="score-content">
+            <div class="score-main-wrap">
+              <div class="main-score">{{ chartData.score.average }}</div>
+            </div>
+            <div class="liquid-chart" ref="liquidChart"></div>
+            <div class="score-info">
+              <div class="info-item"><span class="info-label">较上年</span><span class="info-value up">{{ chartData.score.compareLastYear }} <i class="el-icon-top"></i></span></div>
+              <div class="info-item"><span class="info-label">参评单位</span><span class="info-value">{{ chartData.score.evaluatedUnits }}</span></div>
+              <div class="info-item"><span class="info-label">高于平均分</span><span class="info-value">{{ chartData.score.aboveAverage }}</span></div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+
+        <div class="overview-card distribution-card">
+          <div class="card-header"><span class="card-tag"><i class="el-icon-document"></i> 分数分布情况</span></div>
+          <div class="distribution-content">
+            <div class="distribution-chart" ref="distributionChart"></div>
+            <div class="conclusion inline-conclusion"><span class="check-dot"><i class="el-icon-check"></i></span><span class="conclusion-tag">核心结论：</span><span>超八成单位得分在<span class="red-text">90</span>分以上</span></div>
+          </div>
+        </div>
+
+        <div class="overview-card trend-card">
+          <div class="card-header"><span class="card-tag"><i class="el-icon-document"></i> 总体趋势情况</span></div>
+          <div class="trend-content">
+            <div class="trend-chart" ref="trendChart"></div>
+            <div class="conclusion inline-conclusion"><span class="check-dot"><i class="el-icon-check"></i></span><span class="conclusion-tag">核心结论：</span><span>连续三年稳步提升，增速平稳</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="core-analysis-section">
+        <div class="section-divider"><span></span><b>核心分析</b><span></span></div>
+        <div class="analysis-grid">
+          <div v-for="card in analysisCards" :key="card.key" class="analysis-card">
+            <div class="card-header-bar">
+              <span class="card-title"><i class="el-icon-document"></i>{{ card.title }}</span>
+              <button class="detail-btn">查看详情</button>
+            </div>
+            <div class="chart-container" :ref="card.ref"></div>
+            <div v-if="card.key === 'trend'" class="trend-tabs">
+              <span class="tab-item active">各单位趋势</span>
+              <span class="tab-item">各维度趋势</span>
+              <span class="tab-item">各指标趋势</span>
+            </div>
+            <div class="conclusion-text">
+              <div><span class="check-dot"><i class="el-icon-check"></i></span><span class="conclusion-tag">核心结论</span></div>
+              <p>{{ card.conclusion }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="special-functions-section">
+        <div class="section-divider"><span></span><b>专项功能</b><span></span></div>
+        <div class="functions-grid">
+          <div v-for="card in functionCards" :key="card.title" class="function-card">
+            <div class="function-header"><i class="el-icon-document"></i><span>{{ card.title }}</span></div>
+            <div class="function-items">
+              <div v-for="item in card.items" :key="item.text" class="function-item">
+                <i :class="item.icon"></i><span>{{ item.text }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -376,7 +378,8 @@ export default {
   --text-red: #e72f3a;
   width: 100%;
   max-width: 100%;
-  min-height: 100%;
+  height: 100%;
+  min-height: 0;
   padding: 16px 24px 22px;
   color: #333;
   position: relative;
@@ -385,8 +388,10 @@ export default {
     radial-gradient(ellipse at 82% 100%, rgba(244, 142, 71, .22), transparent 30%),
     radial-gradient(ellipse at 22% 40%, rgba(255, 224, 188, .18), transparent 28%),
     linear-gradient(180deg, rgba(255,255,255,.98) 0 45%, rgba(255,250,242,.97) 100%);
-  overflow-x: hidden;
+  overflow: hidden;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
 }
 
@@ -409,7 +414,11 @@ export default {
 .political-analysis-module *::before,
 .political-analysis-module *::after { box-sizing: border-box; }
 
-.header-section { position: relative; padding: 0 0 10px; text-align: center; }
+.header-section { position: relative; flex: 0 0 auto; padding: 0 0 10px; text-align: center; }
+.analysis-scroll-content { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 0 2px 2px; scrollbar-gutter: stable; }
+.analysis-scroll-content::-webkit-scrollbar { width: 8px; }
+.analysis-scroll-content::-webkit-scrollbar-thumb { background: rgba(255, 96, 58, .28); border-radius: 8px; }
+.analysis-scroll-content::-webkit-scrollbar-track { background: transparent; }
 .header-title { color: var(--text-red); font-size: 36px; line-height: 1.2; font-weight: 800; letter-spacing: 2px; margin: 0 0 12px; }
 .section-divider { display: flex; justify-content: center; align-items: center; gap: 10px; color: #ff4d36; font-size: 24px; font-weight: 700; letter-spacing: 1px; }
 .section-divider span { width: min(200px, 22vw); height: 1px; background: linear-gradient(90deg, transparent, #ff4d36); }
