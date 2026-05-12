@@ -242,9 +242,9 @@ export default {
       this.charts.indicator = chart
       chart.setOption({
         grid: { left: 54, right: 28, bottom: 42, top: 24 },
-        xAxis: { type: 'category', data: ['问卷', '指标', '经营业绩', '扣分', '最终得分'], axisTick: { show: false }, axisLine: { show: false }, axisLabel: { color: '#666', fontSize: 13 } },
-        yAxis: { type: 'value', min: 0, max: 100, interval: 50, axisLabel: { color: '#777' }, splitLine: { lineStyle: { type: 'dashed', color: '#ddd' } } },
-        series: [{ type: 'bar', barWidth: 20, data: [{ value: 42.50, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#ff3b30' }, { offset: 1, color: 'rgba(255,59,48,.05)' }]) } }, { value: 43.42, itemStyle: { color: pink } }, { value: 9.50, itemStyle: { color: '#ffb34d' } }, { value: 2.82, label: { formatter: '-2.82' }, itemStyle: { color: cyan } }, { value: 92.60, itemStyle: { color: '#ff6470' } }], label: { show: true, position: 'top', color: '#222', fontWeight: 700, formatter: ({ value }) => Number(value).toFixed(2) } }]
+        xAxis: { type: 'category', data: ['问卷', '指标', '经营业绩', '扣分', '最终得分'], axisTick: { show: false }, axisLine: { show: true, onZero: true, lineStyle: { color: '#d9d9d9' } }, axisLabel: { color: '#666', fontSize: 13 } },
+        yAxis: { type: 'value', min: -10, max: 100, interval: 20, axisLabel: { color: '#777' }, splitLine: { lineStyle: { type: 'dashed', color: '#ddd' } } },
+        series: [{ type: 'bar', barWidth: 20, data: [{ value: 42.50, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#ff3b30' }, { offset: 1, color: 'rgba(255,59,48,.05)' }]) } }, { value: 43.42, itemStyle: { color: pink } }, { value: 9.50, itemStyle: { color: '#ffb34d' } }, { value: -2.82, label: { position: 'bottom' }, itemStyle: { color: cyan } }, { value: 92.60, itemStyle: { color: '#ff6470' } }], label: { show: true, position: 'top', color: '#222', fontWeight: 700, formatter: ({ value }) => Number(value).toFixed(2) } }]
       })
     },
     initTrendDetailChart() {
