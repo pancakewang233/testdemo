@@ -270,8 +270,8 @@ export default {
         yAxis: { type: 'value', min: 0, max: 100, interval: 20, axisLabel: { color: '#777' }, splitLine: { lineStyle: { color: '#e5e5e5' } } },
         series: [
           { name: '管制业务类', type: 'line', data: [31, 36, 49], symbol: 'circle', symbolSize: 7, itemStyle: { color: '#ff5b55' }, lineStyle: { color: '#ff5b55', width: 2, type: 'solid' }, label: { show: false } },
-          { name: '市场竞争类', type: 'line', data: [8, 22, 30], symbol: 'diamond', symbolSize: 8, itemStyle: { color: '#ff8a18' }, lineStyle: { color: '#ff8a18', width: 2, type: 'dashed' } },
-          { name: '直属机构+共享平台类', type: 'line', data: [24, 25, 13], symbol: 'triangle', symbolSize: 8, itemStyle: { color: '#16b6d2' }, lineStyle: { color: '#16b6d2', width: 2, type: 'dotted' } }
+          { name: '市场竞争类', type: 'line', data: [8, 22, 30], symbol: 'circle', symbolSize: 7, itemStyle: { color: '#ff8a18' }, lineStyle: { color: '#ff8a18', width: 2, type: 'solid' } },
+          { name: '直属机构+共享平台类', type: 'line', data: [24, 25, 13], symbol: 'circle', symbolSize: 7, itemStyle: { color: '#16b6d2' }, lineStyle: { color: '#16b6d2', width: 2, type: 'solid' } }
         ]
       })
     },
