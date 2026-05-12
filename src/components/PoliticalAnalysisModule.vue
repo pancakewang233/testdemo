@@ -232,12 +232,30 @@ export default {
   min-height: 100%;
   padding: 16px 24px 22px;
   color: #333;
+  position: relative;
+  isolation: isolate;
   background:
-    radial-gradient(ellipse at right bottom, rgba(244, 142, 71, .18), transparent 34%),
-    linear-gradient(180deg, rgba(255,255,255,.98) 0 46%, rgba(255,250,242,.96) 100%);
+    radial-gradient(ellipse at 82% 100%, rgba(244, 142, 71, .22), transparent 30%),
+    radial-gradient(ellipse at 22% 40%, rgba(255, 224, 188, .18), transparent 28%),
+    linear-gradient(180deg, rgba(255,255,255,.98) 0 45%, rgba(255,250,242,.97) 100%);
   overflow-x: hidden;
   box-sizing: border-box;
   font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+}
+
+.political-analysis-module::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 190px;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 12% 100%, rgba(249, 191, 125, .24) 0 20%, transparent 42%),
+    radial-gradient(ellipse at 82% 100%, rgba(238, 132, 79, .22) 0 22%, transparent 45%),
+    linear-gradient(180deg, transparent, rgba(255, 238, 216, .76));
 }
 
 .political-analysis-module *,
@@ -254,10 +272,10 @@ export default {
 .year-selector { position: absolute; right: 14px; top: 30px; display: flex; align-items: center; gap: 8px; color: #333; font-size: 15px; }
 .year-select { width: 194px; }
 
-.overview-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 24px; margin: 12px 0 14px; }
+.overview-section { display: grid; grid-template-columns: minmax(330px, 410px) minmax(460px, 1fr) minmax(460px, 1fr); gap: 24px; margin: 12px 0 14px; }
 .overview-card,
 .analysis-card,
-.function-card { min-width: 0; background: rgba(255,255,255,.96); border-radius: 8px; box-shadow: 0 6px 18px rgba(82, 58, 36, .18); border: 1px solid rgba(255, 230, 213, .7); }
+.function-card { min-width: 0; background: rgba(255,255,255,.97); border-radius: 8px; box-shadow: 0 6px 18px rgba(82, 58, 36, .18); border: 1px solid rgba(255, 230, 213, .7); backdrop-filter: blur(1px); }
 .overview-card { height: 226px; padding: 14px 18px 16px; }
 .card-header { margin-bottom: 2px; }
 .card-tag { color: var(--text-red); font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
@@ -280,10 +298,10 @@ export default {
 .check-dot { width: 18px; height: 18px; border-radius: 50%; background: #f8d8b8; display: inline-flex; align-items: center; justify-content: center; color: #fff; margin-right: 4px; font-size: 12px; }
 
 .core-analysis-section { margin: 2px 0 0; }
-.analysis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 24px; margin-top: 14px; }
+.analysis-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin-top: 14px; }
 .analysis-card { height: 478px; padding: 0 10px 14px; overflow: hidden; }
 .card-header-bar { height: 43px; display: flex; align-items: center; justify-content: space-between; margin: 0 -10px; padding-left: 18px; padding-right: 12px; position: relative; }
-.card-header-bar::before { content: ""; position: absolute; left: 0; top: 0; width: 132px; height: 43px; background: linear-gradient(105deg, #ff552f 0%, #ff6a4d 55%, rgba(255,106,77,.45) 56%, rgba(255,106,77,.45) 100%); clip-path: polygon(0 0, 100% 0, 86% 100%, 0 100%); }
+.card-header-bar::before { content: ""; position: absolute; left: 0; top: 0; width: 132px; height: 43px; background: linear-gradient(105deg, #ff552f 0%, #ff6a4d 50%, #ffb1ac 51%, rgba(255,177,172,.58) 100%); clip-path: polygon(0 0, 100% 0, 86% 100%, 0 100%); }
 .card-title { position: relative; z-index: 1; color: #fff; font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 .card-title i { color: #fff; }
 .detail-btn { position: relative; z-index: 1; border: 1px solid #ff5a49; color: #ff4a36; background: #fff; height: 26px; padding: 0 10px; border-radius: 4px; cursor: pointer; font-size: 13px; }
@@ -296,13 +314,19 @@ export default {
 .conclusion-text p { margin: 0; text-align: justify; }
 
 .special-functions-section { margin: 12px 0 0; }
-.functions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 24px; margin-top: 16px; }
+.functions-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 16px; }
 .function-card { height: 94px; padding: 15px 16px 12px; }
 .function-header { display: flex; align-items: center; gap: 10px; color: var(--text-red); font-size: 20px; font-weight: 700; margin-bottom: 12px; }
 .function-items { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 20px; color: #555; font-size: 18px; }
 .function-item { display: flex; align-items: center; gap: 6px; min-width: 0; padding-right: 20px; border-right: 1px solid #eee1d4; white-space: nowrap; }
 .function-item:last-child { border-right: 0; }
 .function-item i { color: #777; font-size: 20px; }
+
+@media (max-width: 1500px) {
+  .overview-section { grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
+  .analysis-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .functions-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+}
 
 @media (max-width: 900px) {
   .political-analysis-module { padding: 14px; }
@@ -311,5 +335,6 @@ export default {
   .year-selector { position: static; justify-content: center; margin-top: 10px; }
   .score-content { flex-wrap: wrap; height: auto; padding-top: 10px; }
   .overview-card { height: auto; min-height: 226px; }
+  .analysis-grid { grid-template-columns: 1fr; }
 }
 </style>
