@@ -141,6 +141,46 @@ const DEFAULT_CHART_DATA = {
 
 const cloneChartData = (data = DEFAULT_CHART_DATA) => JSON.parse(JSON.stringify(data))
 
+const getYearOffset = year => (Number(year) || 2026) - 2026
+const clampScore = value => Math.max(0, Math.min(100, Number(value.toFixed(2))))
+const buildYearChartData = year => {
+  const offset = getYearOffset(year)
+  const data = cloneChartData()
+  const average = clampScore(92.60 + offset * 0.72)
+  const liquidRatio = Number((average / 100).toFixed(2))
+  const highScoreUnits = Math.max(8, 12 + offset)
+  const midScoreUnits = Math.max(6, 10 - offset)
+  const lowScoreUnits = Math.max(1, data.distribution.total - highScoreUnits - midScoreUnits)
+  const yearNumber = Number(year) || 2026
+
+  data.score.average = average.toFixed(2)
+  data.score.liquid = [liquidRatio, Math.max(0.1, Number((liquidRatio - 0.07).toFixed(2)))]
+  data.score.liquidLabel = `${Math.round(liquidRatio * 100)}%`
+  data.score.compareLastYear = `${offset >= 0 ? (1.2 + offset * 0.3).toFixed(1) : (1.2 + offset * 0.2).toFixed(1)}`
+  data.score.evaluatedUnits = `${data.distribution.total}家`
+  data.score.aboveAverage = `${Math.max(0, highScoreUnits + midScoreUnits)}家`
+  data.distribution.ranges = [
+    { value: highScoreUnits, name: '95分以上' },
+    { value: midScoreUnits, name: '90-95分' },
+    { value: lowScoreUnits, name: '90分以下' }
+  ]
+  data.overallTrend.years = [`${yearNumber - 2}年`, `${yearNumber - 1}年`, `${yearNumber}年`]
+  data.overallTrend.values = [average - 0.78, average - 2.07, average].map(clampScore)
+  data.unit.values = [96.20 + offset * 0.45, 92.60 + offset * 0.68, 90.20 + offset * 0.38].map(clampScore)
+  data.dimension.indicators = data.dimension.indicators.map((item, index) => ({
+    ...item,
+    value: clampScore(item.value + offset * [0.32, 0.24, 0.28, 0.18, 0.22][index])
+  }))
+  data.indicator.values = [42.50 + offset * 0.28, 43.42 + offset * 0.22, 9.50 + offset * 0.12, -2.82 + offset * 0.08, average].map(value => Number(value.toFixed(2)))
+  data.trendDetail.years = data.overallTrend.years
+  data.trendDetail.series = data.trendDetail.series.map((item, index) => ({
+    ...item,
+    data: item.data.map((value, valueIndex) => clampScore(value + offset * [2.2, 1.6, 1.1][index] + valueIndex * offset * 0.35))
+  }))
+
+  return data
+}
+
 export default {
   name: 'PoliticalAnalysisModule',
   data() {
@@ -166,13 +206,13 @@ export default {
       const ref = this.$refs[refName]
       return Array.isArray(ref) ? ref[0] : ref
     },
-    async loadChartData() {
-      const apiData = await this.fetchChartData()
+    async loadChartData(year = this.selectedYear) {
+      const apiData = await this.fetchChartData(year)
       this.chartData = this.mergeChartData(apiData)
     },
-    fetchChartData() {
-      // 后续接入真实后端时，只需要在这里按 selectedYear 请求接口并返回同结构数据。
-      return Promise.resolve({})
+    fetchChartData(year = this.selectedYear) {
+      // 后续接入真实后端时，只需要在这里按 year 请求接口并返回同结构数据。
+      return Promise.resolve(buildYearChartData(year))
     },
     mergeChartData(apiData = {}) {
       const merged = cloneChartData()
@@ -183,7 +223,18 @@ export default {
       })
       return merged
     },
+    async refreshCharts(year = this.selectedYear) {
+      await this.loadChartData(year)
+      this.$nextTick(() => this.initCharts())
+    },
+    disposeCharts() {
+      Object.values(this.charts).forEach(chart => {
+        if (chart) chart.dispose()
+      })
+      this.charts = {}
+    },
     initCharts() {
+      this.disposeCharts()
       this.initLiquidChart()
       this.initDistributionChart()
       this.initTrendChart()
@@ -356,18 +407,18 @@ export default {
       })
     }
   },
+  watch: {
+    selectedYear(year) {
+      this.refreshCharts(year)
+    }
+  },
   mounted() {
-    this.$nextTick(async () => {
-      await this.loadChartData()
-      this.initCharts()
-    })
+    this.refreshCharts()
     window.addEventListener('resize', this.handleResize)
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.handleResize)
-    Object.values(this.charts).forEach(chart => {
-      if (chart) chart.dispose()
-    })
+    this.disposeCharts()
   }
 }
 </script>
