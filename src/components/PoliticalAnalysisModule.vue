@@ -197,8 +197,8 @@ export default {
               const width = chart.getWidth()
               const height = chart.getHeight()
               const positions = [
-                { x: width * 0.17, y: height * 0.32, align: 'left' },
                 { x: width * 0.45, y: 8, align: 'left' },
+                { x: width * 0.17, y: height * 0.32, align: 'left' },
                 { x: width * 0.73, y: height * 0.52, align: 'left' }
               ]
               return positions[params.dataIndex] || {}
