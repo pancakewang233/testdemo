@@ -194,17 +194,39 @@ export default {
       const chart = echarts.init(this.getChartEl('liquidChart'))
       this.charts.liquid = chart
       chart.setOption({
-        series: [{
-          type: 'liquidFill',
-          data: this.chartData.score.liquid,
-          radius: '78%',
-          center: ['50%', '50%'],
-          amplitude: 7,
-          color: ['rgba(255, 59, 48, 0.88)', 'rgba(255, 138, 24, 0.42)'],
-          backgroundStyle: { color: 'rgba(255, 59, 48, 0.10)' },
-          outline: { borderDistance: 5, itemStyle: { color: 'none', borderColor: 'rgba(255, 59, 48, .45)', borderWidth: 3, shadowBlur: 12, shadowColor: 'rgba(255, 59, 48, .34)' } },
-          label: { formatter: this.chartData.score.liquidLabel, fontSize: 22, fontWeight: 700, color: '#fff' }
-        }]
+        series: [
+          {
+            type: 'pie',
+            silent: true,
+            z: 1,
+            radius: ['82%', '92%'],
+            center: ['50%', '50%'],
+            label: { show: false },
+            labelLine: { show: false },
+            data: [{
+              value: 1,
+              itemStyle: {
+                color: new echarts.graphic.LinearGradient(0, 0, 1, 1, [
+                  { offset: 0, color: 'rgba(255, 59, 48, .34)' },
+                  { offset: 0.52, color: 'rgba(255, 183, 93, .18)' },
+                  { offset: 1, color: 'rgba(255, 255, 255, .08)' }
+                ])
+              }
+            }]
+          },
+          {
+            type: 'liquidFill',
+            z: 2,
+            data: this.chartData.score.liquid,
+            radius: '74%',
+            center: ['50%', '50%'],
+            amplitude: 7,
+            color: ['rgba(255, 59, 48, 0.88)', 'rgba(255, 138, 24, 0.42)'],
+            backgroundStyle: { color: 'rgba(255, 59, 48, 0.10)' },
+            outline: { borderDistance: 3, itemStyle: { color: 'none', borderColor: 'rgba(255, 138, 24, .18)', borderWidth: 2, shadowBlur: 10, shadowColor: 'rgba(255, 96, 58, .20)' } },
+            label: { formatter: this.chartData.score.liquidLabel, fontSize: 22, fontWeight: 700, color: '#fff' }
+          }
+        ]
       })
     },
     initDistributionChart() {
