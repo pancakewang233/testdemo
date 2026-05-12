@@ -14,13 +14,13 @@
         <div class="card-header"><span class="card-tag"><i class="el-icon-document"></i> 总体平均分</span></div>
         <div class="score-content">
           <div class="score-main-wrap">
-            <div class="main-score">92.60</div>
+            <div class="main-score">{{ chartData.score.average }}</div>
           </div>
           <div class="liquid-chart" ref="liquidChart"></div>
           <div class="score-info">
-            <div class="info-item"><span class="info-label">较上年</span><span class="info-value up">1.2 <i class="el-icon-top"></i></span></div>
-            <div class="info-item"><span class="info-label">参评单位</span><span class="info-value">27家</span></div>
-            <div class="info-item"><span class="info-label">高于平均分</span><span class="info-value">27家</span></div>
+            <div class="info-item"><span class="info-label">较上年</span><span class="info-value up">{{ chartData.score.compareLastYear }} <i class="el-icon-top"></i></span></div>
+            <div class="info-item"><span class="info-label">参评单位</span><span class="info-value">{{ chartData.score.evaluatedUnits }}</span></div>
+            <div class="info-item"><span class="info-label">高于平均分</span><span class="info-value">{{ chartData.score.aboveAverage }}</span></div>
           </div>
         </div>
       </div>
@@ -89,12 +89,63 @@ const orange = '#ff8a18'
 const pink = '#e07aca'
 const cyan = '#38c9e8'
 
+const DEFAULT_CHART_DATA = {
+  score: {
+    average: '92.60',
+    liquid: [0.65, 0.58],
+    liquidLabel: '65%',
+    compareLastYear: '1.2',
+    evaluatedUnits: '27家',
+    aboveAverage: '27家'
+  },
+  distribution: {
+    total: 27,
+    ranges: [
+      { value: 12, name: '95分以上' },
+      { value: 10, name: '90-95分' },
+      { value: 5, name: '90分以下' }
+    ]
+  },
+  overallTrend: {
+    years: ['2024年', '2025年', '2026年'],
+    values: [91.82, 90.53, 92.60]
+  },
+  unit: {
+    categories: ['管制\n业务类', '市场\n竞争类', '直属机构+共享\n平台类'],
+    values: [96.20, 92.60, 90.20]
+  },
+  dimension: {
+    indicators: [
+      { name: '政治生活', value: 23.42, max: 30 },
+      { name: '纪律规矩', value: 23.42, max: 30 },
+      { name: '政治文化', value: 23.42, max: 30 },
+      { name: '选人用人', value: 17.72, max: 30 },
+      { name: '清正廉洁', value: 19.42, max: 30 }
+    ]
+  },
+  indicator: {
+    categories: ['问卷', '指标', '经营业绩', '扣分', '最终得分'],
+    values: [42.50, 43.42, 9.50, -2.82, 92.60]
+  },
+  trendDetail: {
+    years: ['2024年', '2025年', '2026年'],
+    series: [
+      { name: '管制业务类', data: [31, 36, 49], color: '#ff5b55' },
+      { name: '市场竞争类', data: [8, 22, 30], color: '#ff8a18' },
+      { name: '直属机构+共享平台类', data: [24, 25, 13], color: '#16b6d2' }
+    ]
+  }
+}
+
+const cloneChartData = (data = DEFAULT_CHART_DATA) => JSON.parse(JSON.stringify(data))
+
 export default {
   name: 'PoliticalAnalysisModule',
   data() {
     return {
       selectedYear: '2026',
       charts: {},
+      chartData: cloneChartData(),
       analysisCards: [
         { key: 'unit', ref: 'unitChart', title: '看单位', conclusion: '直属机构+共享平台类单位政治生态评价得分相对较低，其中A单位（87.12）、B单位（86.52）和C单位（85.31）排名较低，需重点关注。' },
         { key: 'dimension', ref: 'dimensionChart', title: '看维度', conclusion: '政治生活、政治文化等2个维度为当前短板，主要原因为党员先锋模范作用发挥不明显、为员工减负落实不够到位、职工矛盾利益诉求化解不及时等方面。' },
@@ -113,6 +164,23 @@ export default {
       const ref = this.$refs[refName]
       return Array.isArray(ref) ? ref[0] : ref
     },
+    async loadChartData() {
+      const apiData = await this.fetchChartData()
+      this.chartData = this.mergeChartData(apiData)
+    },
+    fetchChartData() {
+      // 后续接入真实后端时，只需要在这里按 selectedYear 请求接口并返回同结构数据。
+      return Promise.resolve({})
+    },
+    mergeChartData(apiData = {}) {
+      const merged = cloneChartData()
+      Object.keys(apiData).forEach(key => {
+        merged[key] = Array.isArray(apiData[key]) || typeof apiData[key] !== 'object' || apiData[key] === null
+          ? apiData[key]
+          : { ...merged[key], ...apiData[key] }
+      })
+      return merged
+    },
     initCharts() {
       this.initLiquidChart()
       this.initDistributionChart()
@@ -128,25 +196,25 @@ export default {
       chart.setOption({
         series: [{
           type: 'liquidFill',
-          data: [0.65, 0.58],
+          data: this.chartData.score.liquid,
           radius: '78%',
           center: ['50%', '50%'],
           amplitude: 7,
           color: ['rgba(255, 59, 48, 0.88)', 'rgba(255, 138, 24, 0.42)'],
           backgroundStyle: { color: 'rgba(255, 59, 48, 0.10)' },
           outline: { borderDistance: 5, itemStyle: { color: 'none', borderColor: 'rgba(255, 59, 48, .45)', borderWidth: 3, shadowBlur: 12, shadowColor: 'rgba(255, 59, 48, .34)' } },
-          label: { formatter: '65%', fontSize: 22, fontWeight: 700, color: '#fff' }
+          label: { formatter: this.chartData.score.liquidLabel, fontSize: 22, fontWeight: 700, color: '#fff' }
         }]
       })
     },
     initDistributionChart() {
       const chart = echarts.init(this.getChartEl('distributionChart'))
       this.charts.distribution = chart
-      const ranges = [
-        { value: 12, name: '95分以上', itemStyle: { color: red } },
-        { value: 10, name: '90-95分', itemStyle: { color: orange } },
-        { value: 5, name: '90分以下', itemStyle: { color: '#ffc34d' } }
-      ]
+      const colors = [red, orange, '#ffc34d']
+      const ranges = this.chartData.distribution.ranges.map((item, index) => ({
+        ...item,
+        itemStyle: { color: colors[index] || orange }
+      }))
       chart.setOption({
         tooltip: {
           trigger: 'item',
@@ -163,7 +231,7 @@ export default {
             endAngle: 360,
             label: { show: false },
             labelLine: { show: false },
-            data: [{ value: 27, itemStyle: { color: '#fff1e3' } }]
+            data: [{ value: this.chartData.distribution.total, itemStyle: { color: '#fff1e3' } }]
           },
           {
             type: 'pie',
@@ -214,9 +282,9 @@ export default {
       this.charts.trend = chart
       chart.setOption({
         grid: { left: 58, right: 36, bottom: 32, top: 18 },
-        xAxis: { type: 'category', data: ['2024年', '2025年', '2026年'], axisTick: { show: false }, axisLine: { lineStyle: { color: '#d9d9d9' } } },
+        xAxis: { type: 'category', data: this.chartData.overallTrend.years, axisTick: { show: false }, axisLine: { lineStyle: { color: '#d9d9d9' } } },
         yAxis: { type: 'value', min: 0, max: 100, interval: 20, axisLabel: { color: '#777' }, splitLine: { lineStyle: { type: 'dashed', color: '#ddd' } } },
-        series: [{ type: 'line', data: [91.82, 90.53, 92.60], smooth: false, symbolSize: 7, itemStyle: { color: '#ff6868' }, lineStyle: { color: '#ff6868', width: 2 }, label: { show: true, position: 'top', color: '#666', fontWeight: 700, formatter: ({ value }) => Number(value).toFixed(2) }, areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(255, 104, 104, .24)' }, { offset: 1, color: 'rgba(255, 104, 104, .02)' }]) } }]
+        series: [{ type: 'line', data: this.chartData.overallTrend.values, smooth: false, symbolSize: 7, itemStyle: { color: '#ff6868' }, lineStyle: { color: '#ff6868', width: 2 }, label: { show: true, position: 'top', color: '#666', fontWeight: 700, formatter: ({ value }) => Number(value).toFixed(2) }, areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(255, 104, 104, .24)' }, { offset: 1, color: 'rgba(255, 104, 104, .02)' }]) } }]
       })
     },
     initUnitChart() {
@@ -224,17 +292,17 @@ export default {
       this.charts.unit = chart
       chart.setOption({
         grid: { left: 58, right: 26, bottom: 52, top: 26 },
-        xAxis: { type: 'category', data: ['管制\n业务类', '市场\n竞争类', '直属机构+共享\n平台类'], axisTick: { show: false }, axisLine: { show: false }, axisLabel: { color: '#555', fontSize: 14, lineHeight: 20 } },
+        xAxis: { type: 'category', data: this.chartData.unit.categories, axisTick: { show: false }, axisLine: { show: false }, axisLabel: { color: '#555', fontSize: 14, lineHeight: 20 } },
         yAxis: { type: 'value', min: 75, max: 100, interval: 5, axisLabel: { color: '#9aa3af' }, splitLine: { lineStyle: { type: 'dashed', color: '#ececec' } } },
-        series: [{ type: 'bar', barWidth: 18, data: [96.20, 92.60, 90.20], label: { show: true, position: 'top', color: '#333', fontWeight: 700, formatter: ({ value }) => Number(value).toFixed(2) }, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#ff2f1f' }, { offset: 1, color: 'rgba(255,47,31,.05)' }]) } }]
+        series: [{ type: 'bar', barWidth: 18, data: this.chartData.unit.values, label: { show: true, position: 'top', color: '#333', fontWeight: 700, formatter: ({ value }) => Number(value).toFixed(2) }, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#ff2f1f' }, { offset: 1, color: 'rgba(255,47,31,.05)' }]) } }]
       })
     },
     initDimensionChart() {
       const chart = echarts.init(this.getChartEl('dimensionChart'))
       this.charts.dimension = chart
       chart.setOption({
-        radar: { center: ['50%', '51%'], radius: '62%', splitNumber: 5, indicator: [{ name: '政治生活\n23.42', max: 30 }, { name: '纪律规矩\n23.42', max: 30 }, { name: '政治文化\n23.42', max: 30 }, { name: '选人用人\n17.72', max: 30 }, { name: '清正廉洁\n19.42', max: 30 }], axisName: { color: '#555', fontSize: 13, lineHeight: 18 }, splitArea: { areaStyle: { color: ['rgba(255,138,24,.03)', 'rgba(255,138,24,.08)'] } }, splitLine: { lineStyle: { color: '#f2d7bc' } }, axisLine: { lineStyle: { color: '#f2d7bc' } } },
-        series: [{ type: 'radar', data: [{ value: [23.42, 23.42, 23.42, 17.72, 19.42], areaStyle: { color: 'rgba(255,138,24,.18)' }, lineStyle: { color: orange }, itemStyle: { color: orange } }] }]
+        radar: { center: ['50%', '51%'], radius: '62%', splitNumber: 5, indicator: this.chartData.dimension.indicators.map(item => ({ name: `${item.name}\n${Number(item.value).toFixed(2)}`, max: item.max })), axisName: { color: '#555', fontSize: 13, lineHeight: 18 }, splitArea: { areaStyle: { color: ['rgba(255,138,24,.03)', 'rgba(255,138,24,.08)'] } }, splitLine: { lineStyle: { color: '#f2d7bc' } }, axisLine: { lineStyle: { color: '#f2d7bc' } } },
+        series: [{ type: 'radar', data: [{ value: this.chartData.dimension.indicators.map(item => item.value), areaStyle: { color: 'rgba(255,138,24,.18)' }, lineStyle: { color: orange }, itemStyle: { color: orange } }] }]
       })
     },
     initIndicatorChart() {
@@ -242,16 +310,16 @@ export default {
       this.charts.indicator = chart
       chart.setOption({
         grid: { left: 54, right: 28, bottom: 42, top: 24 },
-        xAxis: { type: 'category', data: ['问卷', '指标', '经营业绩', '扣分', '最终得分'], axisTick: { show: false }, axisLine: { show: true, onZero: true, lineStyle: { color: '#d9d9d9' } }, axisLabel: { color: '#666', fontSize: 13 } },
+        xAxis: { type: 'category', data: this.chartData.indicator.categories, axisTick: { show: false }, axisLine: { show: true, onZero: true, lineStyle: { color: '#d9d9d9' } }, axisLabel: { color: '#666', fontSize: 13 } },
         yAxis: { type: 'value', min: -10, max: 100, interval: 20, axisLabel: { color: '#777' }, splitLine: { lineStyle: { type: 'dashed', color: '#ddd' } } },
-        series: [{ type: 'bar', barWidth: 20, data: [{ value: 42.50, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#ff3b30' }, { offset: 1, color: 'rgba(255,59,48,.05)' }]) } }, { value: 43.42, itemStyle: { color: pink } }, { value: 9.50, itemStyle: { color: '#ffb34d' } }, { value: -2.82, label: { position: 'bottom' }, itemStyle: { color: cyan } }, { value: 92.60, itemStyle: { color: '#ff6470' } }], label: { show: true, position: 'top', color: '#222', fontWeight: 700, formatter: ({ value }) => Number(value).toFixed(2) } }]
+        series: [{ type: 'bar', barWidth: 20, data: this.chartData.indicator.values.map((value, index) => ({ value, label: value < 0 ? { position: 'bottom' } : undefined, itemStyle: { color: [new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#ff3b30' }, { offset: 1, color: 'rgba(255,59,48,.05)' }]), pink, '#ffb34d', cyan, '#ff6470'][index] } })), label: { show: true, position: 'top', color: '#222', fontWeight: 700, formatter: ({ value }) => Number(value).toFixed(2) } }]
       })
     },
     initTrendDetailChart() {
       const chart = echarts.init(this.getChartEl('trendDetailChart'))
       this.charts.trendDetail = chart
       chart.setOption({
-        color: ['#ff5b55', '#ff8a18', '#16b6d2'],
+        color: this.chartData.trendDetail.series.map(item => item.color),
         legend: {
           right: 0,
           top: 42,
@@ -263,16 +331,21 @@ export default {
           formatter(name) {
             return name === '直属机构+共享平台类' ? '直属机构+\n共享平台类' : name
           },
-          data: ['管制业务类', '市场竞争类', '直属机构+共享平台类']
+          data: this.chartData.trendDetail.series.map(item => item.name)
         },
         grid: { left: 42, right: 86, bottom: 40, top: 24 },
-        xAxis: { type: 'category', data: ['2024年', '2025年', '2026年'], axisTick: { show: false }, axisLine: { lineStyle: { color: '#ddd' } }, axisLabel: { color: '#666', fontSize: 14 } },
+        xAxis: { type: 'category', data: this.chartData.trendDetail.years, axisTick: { show: false }, axisLine: { lineStyle: { color: '#ddd' } }, axisLabel: { color: '#666', fontSize: 14 } },
         yAxis: { type: 'value', min: 0, max: 100, interval: 20, axisLabel: { color: '#777' }, splitLine: { lineStyle: { color: '#e5e5e5' } } },
-        series: [
-          { name: '管制业务类', type: 'line', data: [31, 36, 49], symbol: 'circle', symbolSize: 7, itemStyle: { color: '#ff5b55' }, lineStyle: { color: '#ff5b55', width: 2, type: 'solid' }, label: { show: false } },
-          { name: '市场竞争类', type: 'line', data: [8, 22, 30], symbol: 'circle', symbolSize: 7, itemStyle: { color: '#ff8a18' }, lineStyle: { color: '#ff8a18', width: 2, type: 'solid' } },
-          { name: '直属机构+共享平台类', type: 'line', data: [24, 25, 13], symbol: 'circle', symbolSize: 7, itemStyle: { color: '#16b6d2' }, lineStyle: { color: '#16b6d2', width: 2, type: 'solid' } }
-        ]
+        series: this.chartData.trendDetail.series.map((item, index) => ({
+          name: item.name,
+          type: 'line',
+          data: item.data,
+          symbol: 'circle',
+          symbolSize: 7,
+          itemStyle: { color: item.color },
+          lineStyle: { color: item.color, width: 2, type: 'solid' },
+          label: index === 0 ? { show: false } : undefined
+        }))
       })
     },
     handleResize() {
@@ -282,7 +355,10 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(() => this.initCharts())
+    this.$nextTick(async () => {
+      await this.loadChartData()
+      this.initCharts()
+    })
     window.addEventListener('resize', this.handleResize)
   },
   beforeDestroy() {
