@@ -142,17 +142,70 @@ export default {
     initDistributionChart() {
       const chart = echarts.init(this.getChartEl('distributionChart'))
       this.charts.distribution = chart
+      const ranges = [
+        { value: 12, name: '95分以上', itemStyle: { color: red } },
+        { value: 10, name: '90-95分', itemStyle: { color: orange } },
+        { value: 5, name: '90分以下', itemStyle: { color: '#ffc34d' } }
+      ]
       chart.setOption({
-        tooltip: { trigger: 'item' },
-        graphic: [{ type: 'text', left: '29%', top: '22%', style: { text: '90-95分  12家单位', fill: '#4b5563', font: '18px sans-serif' } }, { type: 'text', left: '12%', top: '54%', style: { text: '90-95分  10家单位', fill: '#4b5563', font: '18px sans-serif' } }, { type: 'text', right: '16%', top: '57%', style: { text: '90以下  5家单位', fill: '#4b5563', font: '18px sans-serif' } }],
-        series: [{
-          type: 'pie', radius: ['46%', '72%'], center: ['50%', '68%'], startAngle: 180, endAngle: 360, label: { show: false }, labelLine: { show: false },
-          data: [
-            { value: 12, name: '90-95分', itemStyle: { color: red } },
-            { value: 10, name: '90-95分', itemStyle: { color: orange } },
-            { value: 5, name: '90以下', itemStyle: { color: '#ffbc55' } }
-          ]
-        }]
+        tooltip: {
+          trigger: 'item',
+          formatter: ({ name, value }) => `${name}：${value}家单位`
+        },
+        series: [
+          {
+            type: 'pie',
+            silent: true,
+            z: 1,
+            radius: ['50%', '80%'],
+            center: ['50%', '74%'],
+            startAngle: 180,
+            endAngle: 360,
+            label: { show: false },
+            labelLine: { show: false },
+            data: [{ value: 27, itemStyle: { color: '#fff1e3' } }]
+          },
+          {
+            type: 'pie',
+            z: 2,
+            radius: ['50%', '80%'],
+            center: ['50%', '74%'],
+            startAngle: 180,
+            endAngle: 360,
+            minAngle: 8,
+            avoidLabelOverlap: true,
+            itemStyle: {
+              borderColor: '#fff',
+              borderWidth: 3,
+              borderRadius: 8
+            },
+            label: {
+              show: true,
+              color: '#4b5563',
+              fontSize: 16,
+              lineHeight: 20,
+              formatter: ({ name, value }) => `${name}  ${value}家单位`
+            },
+            labelLine: {
+              show: true,
+              length: 12,
+              length2: 28,
+              lineStyle: { color: '#d7a37a', width: 1.5 }
+            },
+            labelLayout(params) {
+              const width = chart.getWidth()
+              const height = chart.getHeight()
+              const positions = [
+                { x: width * 0.34, y: 10, align: 'center' },
+                { x: width * 0.12, y: height * 0.55, align: 'left' },
+                { x: width * 0.73, y: height * 0.58, align: 'left' }
+              ]
+              return positions[params.dataIndex] || {}
+            },
+            emphasis: { scale: false },
+            data: ranges
+          }
+        ]
       })
     },
     initTrendChart() {
