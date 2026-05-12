@@ -251,11 +251,25 @@ export default {
       const chart = echarts.init(this.getChartEl('trendDetailChart'))
       this.charts.trendDetail = chart
       chart.setOption({
-        grid: { left: 42, right: 92, bottom: 40, top: 24 },
+        color: ['#ff5b55', '#ff8a18', '#16b6d2'],
+        legend: {
+          right: 0,
+          top: 42,
+          orient: 'vertical',
+          itemWidth: 22,
+          itemHeight: 8,
+          itemGap: 10,
+          textStyle: { color: '#666', fontSize: 12 },
+          data: ['管制业务类', '市场竞争类', '直属机构+共享平台类']
+        },
+        grid: { left: 42, right: 118, bottom: 40, top: 24 },
         xAxis: { type: 'category', data: ['2024年', '2025年', '2026年'], axisTick: { show: false }, axisLine: { lineStyle: { color: '#ddd' } }, axisLabel: { color: '#666', fontSize: 14 } },
         yAxis: { type: 'value', min: 0, max: 100, interval: 20, axisLabel: { color: '#777' }, splitLine: { lineStyle: { color: '#e5e5e5' } } },
-        series: [{ name: '管制业务类', type: 'line', data: [31, 36, 49], itemStyle: { color: '#ff5b55' }, lineStyle: { color: '#ff5b55' }, label: { show: false } }, { name: '市场竞争类', type: 'line', data: [8, 22, 30], itemStyle: { color: '#ff8a18' }, lineStyle: { color: '#ff8a18' } }, { name: '直属机构+共享平台类', type: 'line', data: [24, 25, 13], itemStyle: { color: '#16b6d2' }, lineStyle: { color: '#16b6d2' } }],
-        graphic: [{ type: 'text', right: 10, top: 84, style: { text: '管制业务类\n市场竞争类\n直属机构+共\n享平台类', fill: '#666', font: '13px sans-serif', lineHeight: 18 } }]
+        series: [
+          { name: '管制业务类', type: 'line', data: [31, 36, 49], symbol: 'circle', symbolSize: 7, itemStyle: { color: '#ff5b55' }, lineStyle: { color: '#ff5b55', width: 2, type: 'solid' }, label: { show: false } },
+          { name: '市场竞争类', type: 'line', data: [8, 22, 30], symbol: 'diamond', symbolSize: 8, itemStyle: { color: '#ff8a18' }, lineStyle: { color: '#ff8a18', width: 2, type: 'dashed' } },
+          { name: '直属机构+共享平台类', type: 'line', data: [24, 25, 13], symbol: 'triangle', symbolSize: 8, itemStyle: { color: '#16b6d2' }, lineStyle: { color: '#16b6d2', width: 2, type: 'dotted' } }
+        ]
       })
     },
     handleResize() {
