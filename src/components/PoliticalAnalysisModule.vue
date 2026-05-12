@@ -15,13 +15,13 @@
         <div class="score-content">
           <div class="score-main-wrap">
             <div class="main-score">92.60</div>
-            <div class="score-info">
-              <div class="info-item"><span class="info-label">较上年</span><span class="info-value up">1.2 <i class="el-icon-top"></i></span></div>
-              <div class="info-item"><span class="info-label">参评单位</span><span class="info-value">27家</span></div>
-              <div class="info-item"><span class="info-label">高于平均分</span><span class="info-value">27家</span></div>
-            </div>
           </div>
           <div class="liquid-chart" ref="liquidChart"></div>
+          <div class="score-info">
+            <div class="info-item"><span class="info-label">较上年</span><span class="info-value up">1.2 <i class="el-icon-top"></i></span></div>
+            <div class="info-item"><span class="info-label">参评单位</span><span class="info-value">27家</span></div>
+            <div class="info-item"><span class="info-label">高于平均分</span><span class="info-value">27家</span></div>
+          </div>
         </div>
       </div>
 
@@ -277,22 +277,24 @@ export default {
 .analysis-card,
 .function-card { min-width: 0; background: rgba(255,255,255,.97); border-radius: 8px; box-shadow: 0 6px 18px rgba(82, 58, 36, .18); border: 1px solid rgba(255, 230, 213, .7); backdrop-filter: blur(1px); }
 .overview-card { height: 226px; padding: 14px 18px 16px; }
-.card-header { margin-bottom: 2px; }
+.card-header { height: 28px; margin-bottom: 2px; }
 .card-tag { color: var(--text-red); font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 .card-tag i,
 .card-title i,
 .function-header i { color: #ff523f; font-size: 15px; }
-.score-content { height: 160px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 18px; }
-.score-main-wrap { display: flex; flex-direction: column; gap: 8px; }
-.main-score { color: var(--text-red); font-size: 55px; font-weight: 800; letter-spacing: 2px; }
-.score-info { display: grid; grid-template-columns: repeat(3, minmax(0, auto)); gap: 18px; align-items: end; }
-.info-item { display: flex; flex-direction: column; gap: 6px; font-size: 16px; color: #627083; }
+.score-content { height: 160px; display: grid; grid-template-columns: minmax(0, 1fr) 112px; grid-template-rows: 1fr auto; column-gap: 18px; row-gap: 6px; align-items: center; padding: 2px 18px 0; }
+.score-main-wrap { min-width: 0; align-self: end; }
+.main-score { color: var(--text-red); font-size: 55px; line-height: 1; font-weight: 800; letter-spacing: 2px; white-space: nowrap; }
+.score-info { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: end; }
+.info-item { display: flex; flex-direction: column; gap: 6px; min-width: 0; font-size: 16px; color: #627083; }
 .info-value { color: var(--text-red); font-weight: 800; }
 .info-value.up { color: var(--text-red); }
-.liquid-chart { width: 92px; height: 92px; }
+.liquid-chart { width: 96px; height: 96px; justify-self: end; align-self: center; }
+.distribution-content,
+.trend-content { height: 166px; display: flex; flex-direction: column; justify-content: space-between; }
 .distribution-chart,
-.trend-chart { width: 100%; height: 162px; }
-.inline-conclusion { height: 34px; display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: -2px; color: #777; font-size: 17px; }
+.trend-chart { width: 100%; height: 132px; flex: 1 1 auto; }
+.inline-conclusion { height: 32px; display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 0; color: #777; font-size: 17px; }
 .conclusion-tag { font-weight: 800; color: #555; }
 .red-text { color: #ff2f24; }
 .check-dot { width: 18px; height: 18px; border-radius: 50%; background: #f8d8b8; display: inline-flex; align-items: center; justify-content: center; color: #fff; margin-right: 4px; font-size: 12px; }
@@ -300,8 +302,8 @@ export default {
 .core-analysis-section { margin: 2px 0 0; }
 .analysis-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin-top: 14px; }
 .analysis-card { height: 478px; padding: 0 10px 14px; overflow: hidden; }
-.card-header-bar { height: 43px; display: flex; align-items: center; justify-content: space-between; margin: 0 -10px; padding-left: 18px; padding-right: 12px; position: relative; }
-.card-header-bar::before { content: ""; position: absolute; left: 0; top: 0; width: 132px; height: 43px; background: linear-gradient(105deg, #ff552f 0%, #ff6a4d 50%, #ffb1ac 51%, rgba(255,177,172,.58) 100%); clip-path: polygon(0 0, 100% 0, 86% 100%, 0 100%); }
+.card-header-bar { height: 43px; display: flex; align-items: center; justify-content: space-between; margin: 0 -10px; padding-left: 18px; padding-right: 12px; position: relative; overflow: hidden; }
+.card-header-bar::before { content: ""; position: absolute; left: 0; top: 0; width: 146px; height: 43px; background: linear-gradient(100deg, #ff4a2f 0%, #ff7058 58%, rgba(255, 169, 165, .72) 82%, rgba(255, 169, 165, 0) 100%); clip-path: polygon(0 0, 100% 0, 86% 100%, 0 100%); }
 .card-title { position: relative; z-index: 1; color: #fff; font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 .card-title i { color: #fff; }
 .detail-btn { position: relative; z-index: 1; border: 1px solid #ff5a49; color: #ff4a36; background: #fff; height: 26px; padding: 0 10px; border-radius: 4px; cursor: pointer; font-size: 13px; }
@@ -322,7 +324,7 @@ export default {
 .function-item:last-child { border-right: 0; }
 .function-item i { color: #777; font-size: 20px; }
 
-@media (max-width: 1500px) {
+@media (max-width: 1280px) {
   .overview-section { grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
   .analysis-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .functions-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
@@ -333,7 +335,7 @@ export default {
   .header-title { font-size: 28px; }
   .section-divider span { width: 90px; }
   .year-selector { position: static; justify-content: center; margin-top: 10px; }
-  .score-content { flex-wrap: wrap; height: auto; padding-top: 10px; }
+  .score-content { height: auto; min-height: 160px; padding-top: 10px; }
   .overview-card { height: auto; min-height: 226px; }
   .analysis-grid { grid-template-columns: 1fr; }
 }
