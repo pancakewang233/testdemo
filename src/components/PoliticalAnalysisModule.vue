@@ -305,7 +305,14 @@ export default {
               color: '#4b5563',
               fontSize: 16,
               lineHeight: 20,
-              formatter: ({ name, value }) => `${name}  ${value}家单位`
+              formatter: ({ name, value }) => `${name}  {unitCount|${value}}家单位`,
+              rich: {
+                unitCount: {
+                  color: '#4b5563',
+                  fontSize: 16,
+                  fontWeight: 800
+                }
+              }
             },
             labelLine: {
               show: true,
