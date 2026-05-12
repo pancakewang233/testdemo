@@ -415,10 +415,8 @@ export default {
 .political-analysis-module *::after { box-sizing: border-box; }
 
 .header-section { position: relative; flex: 0 0 auto; padding: 0 0 10px; text-align: center; }
-.analysis-scroll-content { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 0 2px 2px; scrollbar-gutter: stable; }
-.analysis-scroll-content::-webkit-scrollbar { width: 8px; }
-.analysis-scroll-content::-webkit-scrollbar-thumb { background: rgba(255, 96, 58, .28); border-radius: 8px; }
-.analysis-scroll-content::-webkit-scrollbar-track { background: transparent; }
+.analysis-scroll-content { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 0 2px 2px; scrollbar-width: none; -ms-overflow-style: none; }
+.analysis-scroll-content::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .header-title { color: var(--text-red); font-size: 36px; line-height: 1.2; font-weight: 800; letter-spacing: 2px; margin: 0 0 12px; }
 .section-divider { display: flex; justify-content: center; align-items: center; gap: 10px; color: #ff4d36; font-size: 24px; font-weight: 700; letter-spacing: 1px; }
 .section-divider span { width: min(200px, 22vw); height: 1px; background: linear-gradient(90deg, transparent, #ff4d36); }
