@@ -428,7 +428,7 @@ export default {
 .year-selector { position: absolute; right: 14px; top: 30px; display: flex; align-items: center; gap: 8px; color: #333; font-size: 15px; }
 .year-select { width: 194px; }
 
-.overview-section { display: grid; grid-template-columns: minmax(330px, 410px) minmax(460px, 1fr) minmax(460px, 1fr); gap: 24px; margin: 12px 0 14px; }
+.overview-section { display: grid; grid-template-columns: calc((100% - 72px) / 4) minmax(0, 1fr) minmax(0, 1fr); gap: 24px; margin: 12px 0 14px; }
 .overview-card,
 .analysis-card,
 .function-card { min-width: 0; background: rgba(255,255,255,.97); border-radius: 8px; box-shadow: 0 6px 18px rgba(82, 58, 36, .18); border: 1px solid rgba(255, 230, 213, .7); backdrop-filter: blur(1px); }
