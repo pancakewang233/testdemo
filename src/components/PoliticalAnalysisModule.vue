@@ -292,7 +292,7 @@ export default {
       this.charts.unit = chart
       chart.setOption({
         grid: { left: 58, right: 26, bottom: 52, top: 26 },
-        xAxis: { type: 'category', data: this.chartData.unit.categories, axisTick: { show: false }, axisLine: { show: false }, axisLabel: { color: '#555', fontSize: 14, lineHeight: 20 } },
+        xAxis: { type: 'category', data: this.chartData.unit.categories, axisTick: { show: false }, axisLine: { show: false }, axisLabel: { interval: 0, hideOverlap: false, color: '#555', fontSize: 14, lineHeight: 20 } },
         yAxis: { type: 'value', min: 75, max: 100, interval: 5, axisLabel: { color: '#9aa3af' }, splitLine: { lineStyle: { type: 'dashed', color: '#ececec' } } },
         series: [{ type: 'bar', barWidth: 18, data: this.chartData.unit.values, label: { show: true, position: 'top', color: '#333', fontWeight: 700, formatter: ({ value }) => Number(value).toFixed(2) }, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#ff2f1f' }, { offset: 1, color: 'rgba(255,47,31,.05)' }]) } }]
       })
