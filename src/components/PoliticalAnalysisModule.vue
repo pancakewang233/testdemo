@@ -188,17 +188,18 @@ export default {
             },
             labelLine: {
               show: true,
-              length: 12,
-              length2: 28,
+              length: 8,
+              length2: 16,
+              smooth: false,
               lineStyle: { color: '#d7a37a', width: 1.5 }
             },
             labelLayout(params) {
               const width = chart.getWidth()
               const height = chart.getHeight()
               const positions = [
-                { x: width * 0.34, y: 10, align: 'center' },
-                { x: width * 0.12, y: height * 0.55, align: 'left' },
-                { x: width * 0.73, y: height * 0.58, align: 'left' }
+                { x: width * 0.17, y: height * 0.32, align: 'left' },
+                { x: width * 0.45, y: 8, align: 'left' },
+                { x: width * 0.73, y: height * 0.52, align: 'left' }
               ]
               return positions[params.dataIndex] || {}
             },
