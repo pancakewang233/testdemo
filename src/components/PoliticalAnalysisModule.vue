@@ -256,13 +256,16 @@ export default {
           right: 0,
           top: 42,
           orient: 'vertical',
-          itemWidth: 22,
-          itemHeight: 8,
-          itemGap: 10,
-          textStyle: { color: '#666', fontSize: 12 },
+          itemWidth: 14,
+          itemHeight: 6,
+          itemGap: 8,
+          textStyle: { color: '#666', fontSize: 11, lineHeight: 14 },
+          formatter(name) {
+            return name === '直属机构+共享平台类' ? '直属机构+\n共享平台类' : name
+          },
           data: ['管制业务类', '市场竞争类', '直属机构+共享平台类']
         },
-        grid: { left: 42, right: 118, bottom: 40, top: 24 },
+        grid: { left: 42, right: 86, bottom: 40, top: 24 },
         xAxis: { type: 'category', data: ['2024年', '2025年', '2026年'], axisTick: { show: false }, axisLine: { lineStyle: { color: '#ddd' } }, axisLabel: { color: '#666', fontSize: 14 } },
         yAxis: { type: 'value', min: 0, max: 100, interval: 20, axisLabel: { color: '#777' }, splitLine: { lineStyle: { color: '#e5e5e5' } } },
         series: [
