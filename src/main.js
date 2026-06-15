@@ -34,9 +34,29 @@ Vue.prototype.$toFixed = toFixedFn;
 
 // 正整数输入指令
 Vue.directive('positiveInteger', {
-  bind(el) {
-    el.addEventListener('input', (e) => {
-      e.target.value = e.target.value.replace(/[^\d]/g, '');
+  inserted(el) {
+    const input = el.querySelector('input') || el;
+    
+    // keydown 阶段阻止非数字输入，提供更好的用户体验
+    input.addEventListener('keydown', (e) => {
+      const key = e.key;
+      // 允许：数字键、控制键（Backspace, Delete, Tab, Enter, 方向键等）
+      const isDigit = /^\d$/.test(key);
+      const isControlKey = ['Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key);
+      const isMetaKey = e.ctrlKey || e.metaKey; // 允许 Ctrl/Cmd + A/C/V/X 等操作
+      
+      if (!isDigit && !isControlKey && !isMetaKey) {
+        e.preventDefault();
+      }
+    });
+    
+    // input 事件作为后备过滤，防止通过粘贴等方式输入非数字
+    input.addEventListener('input', (e) => {
+      const oldValue = e.target.value;
+      const newValue = oldValue.replace(/[^\d]/g, '');
+      if (newValue !== oldValue) {
+        e.target.value = newValue;
+      }
     });
   },
 });

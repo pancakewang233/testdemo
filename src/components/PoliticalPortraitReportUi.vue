@@ -447,6 +447,10 @@ export default {
       if (!el) return
       const chart = echarts.init(el)
       this.charts[refName] = chart
+      const numericValues = values.map(value => Number(value)).filter(value => Number.isFinite(value))
+      const maxValue = Math.max(0, ...numericValues)
+      const axisStep = Math.max(5, Math.ceil(maxValue / 5 / 5) * 5)
+      const axisMax = axisStep * 5
       chart.setOption({
         title: {
           text: title,
@@ -458,8 +462,8 @@ export default {
         xAxis: {
           type: 'value',
           min: 0,
-          max: 100,
-          interval: 25,
+          max: axisMax,
+          interval: axisStep,
           axisLabel: { formatter: '{value}%', color: '#8a8a8a', fontSize: 11 },
           axisLine: { show: false },
           axisTick: { show: false },
@@ -516,8 +520,8 @@ export default {
           xAxis: { type: 'category', data: ['2020', '2021', '2022'], ...axisStyle },
           yAxis: { type: 'value', max: 100, splitLine: { lineStyle: { type: 'dashed', color: '#ddd' } }, axisLabel: { color: '#999', fontSize: 10 } },
           series: [
-            { name: '内容内容', type: 'bar', barWidth: 7, barGap: '110%', barCategoryGap: '60%', data: [48, 52, 42], itemStyle: { color: '#ff3b2f', borderRadius: [5, 5, 0, 0] } },
-            { name: '平均水平', type: 'bar', barWidth: 7, barGap: '110%', barCategoryGap: '60%', data: [52, 48, 44], itemStyle: { color: '#ff9b34', borderRadius: [5, 5, 0, 0] } }
+            { name: '内容内容', type: 'bar', barWidth: 7, barGap: '160%', barCategoryGap: '60%', data: [48, 52, 42], itemStyle: { color: '#ff3b2f', borderRadius: [5, 5, 0, 0] } },
+            { name: '平均水平', type: 'bar', barWidth: 7, barGap: '160%', barCategoryGap: '60%', data: [52, 48, 44], itemStyle: { color: '#ff9b34', borderRadius: [5, 5, 0, 0] } }
           ]
         })
         return

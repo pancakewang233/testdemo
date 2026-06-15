@@ -62,20 +62,21 @@
                       v-if="row.dataTypeSelf === 1"
                       v-model="yearItem[row.scoreMap[unit.orgId].qualKey]"
                       size="small"
+                      clearable
                       @change="onQualChange(row, unit.orgId, yearItem)"
                     >
                       <el-option v-for="opt in row.scoreType" :key="opt.value" :label="opt.label" :value="opt.value" />
                     </el-select>
                     <!-- 百分比 -->
-                    <el-input v-else-if="row.dataTypeSelf === 4" type="number" v-model="yearItem[unit.orgId]" class="scope-inp">
+                    <el-input v-else-if="row.dataTypeSelf === 4" type="number" v-model="yearItem[unit.orgId]" class="scope-inp" clearable>
                       <template slot="append">%</template>
                     </el-input>
                     <!-- 正整数 -->
-                    <el-input v-else-if="row.dataTypeSelf === 3" v-positiveInteger type="number" v-model="yearItem[unit.orgId]" />
+                    <el-input v-else-if="row.dataTypeSelf === 3" v-positiveInteger type="number" v-model="yearItem[unit.orgId]" clearable />
                     <!-- 定量数值 -->
-                    <el-input v-else-if="row.dataTypeSelf === 2" type="number" v-model="yearItem[unit.orgId]" />
+                    <el-input v-else-if="row.dataTypeSelf === 2" type="number" v-model="yearItem[unit.orgId]" clearable />
                     <!-- 文本 -->
-                    <el-input v-else type="text" v-model="yearItem[unit.orgId]" />
+                    <el-input v-else type="text" v-model="yearItem[unit.orgId]" clearable />
                   </template>
 
                   <div v-else class="cell-text" :title="yearItem['_d' + unit.orgId]">{{
@@ -111,7 +112,7 @@
 </template>
 
 <script>
-import { mockGetDataResult, mockGetDataResult2, mockScoreResult, mockScoreResult2 } from '../data/mockData.js';
+import { mockGetDataResult, mockScoreResult } from '../data/mockData2.js';
 
 export default {
   name: 'MockEleTable',
@@ -208,7 +209,7 @@ export default {
     // ═══════════════════ 数据加载 ═══════════════════
 
     getData() {
-      this.columnList = mockGetDataResult2.orgTypeVOs;
+      this.columnList = mockGetDataResult.orgTypeVOs;
       this.buildTableData();
     },
 
@@ -219,7 +220,7 @@ export default {
      * 只在最终一次赋值时触发 Vue 响应式转换，消除数千次 $set 开销。
      */
     buildTableData() {
-      const src = JSON.parse(JSON.stringify(mockScoreResult2));
+      const src = JSON.parse(JSON.stringify(mockScoreResult));
       const units = this.flatUnits;
 
       const rows = src.map((item) => {
@@ -345,10 +346,13 @@ export default {
         (vos.scoreYearDTO || []).forEach((yearItem) => {
           units.forEach((unit) => {
             const orgId = unit.orgId;
-            const val = yearItem[orgId];
-            yearItem['_d' + orgId] = isPercent
-              ? (val ? val + '%' : '')
-              : (val || '');
+            const val = isQual
+              ? this.getQualLabel(yearItem[orgId + orgId], scoreTypes, qualLabelCache)
+              : yearItem[orgId];
+            if (isQual) {
+              yearItem[orgId] = val;
+            }
+            yearItem['_d' + orgId] = this.getDisplayValue(val, isPercent);
           });
         });
       });
@@ -370,21 +374,23 @@ export default {
             const meta = metaMap[orgId];
 
             const rawData = isQual
-              ? (qualLabelCache[qualVal] !== undefined
-                  ? qualLabelCache[qualVal]
-                  : (qualLabelCache[qualVal] = (scoreTypes || []).find((i) => i.value == qualVal)?.label))
+              ? this.getQualLabel(qualVal, scoreTypes, qualLabelCache)
               : orgVal;
+            const orgScore = isQual
+              ? qualVal
+              : this.getOrgScore(orgVal, isPercent);
+
+            if (meta) {
+              meta.rawData = rawData;
+              meta.orgScore = orgScore;
+            }
 
             params.push({
               businessindId: row.id,
               orgId,
               id: meta?.id || '',
               orgName: meta?.orgName || '',
-              orgScore: isQual
-                ? qualVal
-                : isPercent
-                  ? (orgVal / 100).toFixed(16)
-                  : orgVal,
+              orgScore,
               scoreYear: meta?.scoreYear || '',
               rawData,
               dataType: meta?.dataType || dt,
@@ -403,16 +409,37 @@ export default {
 
     // ═══════════════════ 其他操作 ═══════════════════
 
-    /** 定性评价下拉变化时，同步 label 到展示字段和预计算文本 */
+    /** 编辑值清空、展示和保存格式化 */
+    isEmptyValue(value) {
+      return value === '' || value === null || value === undefined;
+    },
+
+    getDisplayValue(value, isPercent) {
+      if (this.isEmptyValue(value)) return '';
+      return isPercent ? value + '%' : value;
+    },
+
+    getQualLabel(value, scoreTypes, cache) {
+      if (this.isEmptyValue(value)) return '';
+      if (cache[value] !== undefined) return cache[value];
+
+      const found = (scoreTypes || []).find((i) => i.value == value);
+      cache[value] = found ? found.label : '';
+      return cache[value];
+    },
+
+    getOrgScore(value, isPercent) {
+      if (this.isEmptyValue(value)) return '';
+      return isPercent ? (value / 100).toFixed(16) : value;
+    },
+
     onQualChange(row, orgId, yearItem) {
       const map = row.scoreMap?.[orgId];
       if (!map) return;
       const qualKey = map.qualKey;
-      const found = (row.scoreType || []).find((i) => i.value === yearItem[qualKey]);
-      if (found) {
-        yearItem[orgId] = found.label;
-        yearItem['_d' + orgId] = found.label;
-      }
+      const qualLabel = this.getQualLabel(yearItem[qualKey], row.scoreType, {});
+      yearItem[orgId] = qualLabel;
+      yearItem['_d' + orgId] = qualLabel;
     },
 
     clickReturn() {
