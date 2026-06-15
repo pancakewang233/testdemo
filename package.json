@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Vue2 H5 明细合计计算应用",
   "scripts": {
-    "dev": "webpack-dev-server --mode development --open",
+    "dev": "webpack-dev-server --mode development",
     "build": "webpack --mode production"
   },
   "dependencies": {

@@ -78,7 +78,15 @@
           <div class="list-head">
             <span class="rank-col">排名</span>
             <span class="unit-col">单位</span>
-            <span class="bar-col">得分</span>
+            <span class="bar-col">
+              得分
+              <div class="avg-line-track">
+                <div
+                  class="score-bar-avg-line"
+                  :style="{ left: barWidth(card.averageScore, card) }"
+                ></div>
+              </div>
+            </span>
             <span class="score-col">分数</span>
           </div>
 
@@ -107,7 +115,7 @@
                   <div
                     class="score-bar-fill"
                     :class="item.score >= card.averageScore ? 'is-above' : 'is-below'"
-                    :style="{ width: barWidth(item.score) }"
+                    :style="{ width: barWidth(item.score, card) }"
                   ></div>
                 </div>
               </div>
@@ -450,9 +458,29 @@ export default {
         unit: match[2],
       };
     },
-    barWidth(score) {
-      const width = Math.max(18, Math.min(100, toSafeNumber(score)));
-      return width + "%";
+    barWidth(score, card) {
+      const allScores = card.units.map((u) => toSafeNumber(u.score));
+      const minScore = Math.min(...allScores);
+      const maxScore = Math.max(...allScores);
+
+      // 取比最大值大一点的整数，对齐到 5/10/20/30/100 等
+      function ceilToNice(n) {
+        if (n <= 10) return Math.ceil(n / 5) * 5 || 5;
+        if (n <= 50) return Math.ceil(n / 10) * 10;
+        if (n <= 100) return Math.ceil(n / 20) * 20;
+        return Math.ceil(n / 50) * 50;
+      }
+
+      const niceMax = ceilToNice(maxScore);
+      const niceMin = Math.floor(minScore / 5) * 5;
+      const range = niceMax - niceMin || 1;
+      const normalized = (toSafeNumber(score) - niceMin) / range;
+      if(score <= 0){
+        return "0%";
+      }else{
+        const width = Math.max(0, Math.min(100, normalized * 100));
+        return width + "%";
+      }
     },
   },
 };
@@ -717,53 +745,48 @@ export default {
 }
 
 .conclusion-block {
-  display: flex;
-  align-items: center;
   margin-bottom: 18px;
   padding: 12px 14px 14px;
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.52);
-}
-
-.conclusion-block > * + * {
-  margin-left: 12px;
+  display: flex;
+  align-items: flex-start;
 }
 
 .conclusion-label {
-  flex: 0 0 auto;
-  margin-bottom: 0;
+  flex-shrink: 0;
+  margin-right: 8px;
   white-space: nowrap;
   font-size: 14px;
   font-weight: 700;
   color: #5b6782;
+  line-height: 24px;
 }
 
 .conclusion-space {
   flex: 1;
   min-width: 0;
-  min-height: 40px;
-  padding: 8px 12px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.35);
-  position: relative;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
+  overflow: hidden;   
 }
 
 .conclusion-marquee {
-  display: inline-block;
-  flex: 0 0 auto;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   font-size: 14px;
   line-height: 24px;
   color: #5d6c89;
-  white-space: nowrap;
   max-width: 100%;
   overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-all;
 }
 
 .conclusion-space.is-marquee-enabled .conclusion-marquee {
+  display: inline-block;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: unset;
+  white-space: nowrap;
+  word-break: normal;
   max-width: none;
   overflow: visible;
   text-overflow: clip;
@@ -883,15 +906,32 @@ export default {
 }
 
 .score-bar-track {
+  position: relative;
   height: 8px;
   border-radius: 999px;
   background: rgba(114, 129, 159, 0.16);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .score-bar-fill {
   height: 100%;
   border-radius: 999px;
+}
+
+.avg-line-track {
+  position: relative;
+  height: 8px;
+  margin-top: 4px;
+}
+
+.score-bar-avg-line {
+  position: absolute;
+  top: -2px;
+  width: 2px;
+  height: 12px;
+  border-radius: 1px;
+  background: #5c6a86;
+  opacity: 0.7;
 }
 
 .score-bar-fill.is-above {

@@ -4,6 +4,9 @@ const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
   entry: './src/main.js',
+  cache: {
+    type: 'filesystem'
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js'
@@ -17,7 +20,13 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        exclude: (filePath) => (
+          /node_modules/.test(filePath) ||
+          filePath === path.resolve(__dirname, 'src/data/mockData.js')
+        ),
+        options: {
+          cacheDirectory: true
+        }
       },
       {
         test: /\.css$/,
